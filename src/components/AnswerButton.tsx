@@ -3,6 +3,7 @@
 import { SetStateAction, useState } from "react";
 // Here, we need Dispatch to allow the passing in of a useState setter
 import { Dispatch } from "react";
+import {isCorrect} from "../utils/helpers.ts";
 
 // This interface gives the Types of variable being passed from AnswerBlock, again using : Props
 // Dispatch is then set up in the Props and passed into the function with the Type of variable we should return
@@ -14,6 +15,9 @@ interface Props {
   setShowStory: Dispatch<SetStateAction<number>>;
   guesses: number;
   setGuesses: Dispatch<SetStateAction<number>>;
+  setTotalScore: Dispatch<SetStateAction<number>>;
+  possibleScore: number;
+  totalScore: number
 }
 
 function AnswerButton({
@@ -22,11 +26,21 @@ function AnswerButton({
   correct,
   setShowStory,
   guesses,
-  setGuesses,
+  setGuesses, setTotalScore,totalScore,
+
+
+    possibleScore
 }: Props) {
+
+  let gridColumn = -1
+  let gridRow =-1
   // Method to determine the grid to place the button into so everything is laid out nicely
   // This will be called by the className on each individual button
   function defineGridCell(gridCell: number) {
+     gridRow = Math.floor(gridCell/2)
+     gridColumn  = gridCell%2
+    console.log(gridRow,gridColumn)
+
     switch (gridCell) {
       case 0:
         return "answer r1c2";
@@ -37,32 +51,40 @@ function AnswerButton({
       case 3:
         return "answer r2c4";
     }
+
+
+
   }
 
+defineGridCell(gridCell)
+
   // List of background colors for the buttons
-  const color = ["blue", "green", "red"];
+  // const color = ["blue", "green", "red"];
 
   // UseState which will control the re-rendering of the button background color
-  const [answerColor, setAnswerColor] = useState(color[0]);
-
+  const [answerColor, setAnswerColor] = useState("blue");
+  const [isAnswered, setIsAnswered] = useState(false)
   // Method which will control the state changes for the button background color
   // This will be called by each button individually when they are clicked
   // If the gridcell value matches the correct answer: green; otherwise: red
-  // If the correct answer is found, show the story by flipping the Dispatch setter flag
-  // We need to limit the guess count to 3 so a score always shows up
+  // If the correct answer is found, show the story setting the story state
+  // X We need to limit the guess count to 3 so a score always shows up
   // We need to also stop multiple clicks on a button from registering
+
+
+
   function handleClick(response: number) {
-    if (response == correct) {
-      setAnswerColor(color[1]);
-      setShowStory(1);
-      if (guesses < 3 && answerColor != "green") {
-        setGuesses(guesses);
-      }
+    if (isAnswered || guesses === 4) return
+    setIsAnswered(true)
+
+    if (isCorrect(response, correct)) {
+      setAnswerColor("green");
+      setShowStory(true);
+      setTotalScore(totalScore + possibleScore)
+
     } else {
-      setAnswerColor(color[2]);
-      if (guesses < 3 && answerColor != "red") {
-        setGuesses(guesses + 1);
-      }
+      setAnswerColor("red");
+      setGuesses(guesses + 1);
     }
   }
 
@@ -71,8 +93,11 @@ function AnswerButton({
   return (
     <>
       <button
-        className={defineGridCell(gridCell)}
+        // className={defineGridCell(gridCell)}
         style={{
+          gridColumStart: gridColumn*2 + 2,
+          gridColumnEnd: gridColumn*2 +3,
+          gridRowStart: gridRow+2,
           backgroundColor: answerColor,
           margin: "5px",
           padding: "15px",

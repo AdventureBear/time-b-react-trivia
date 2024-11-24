@@ -4,8 +4,13 @@ import Welcome from "./components/Welcome";
 import Instructions from "./components/Instructions";
 import StartGame from "./components/StartGame";
 
+
+
+
 function App() {
   // const [startGame, setStartGame] = useState(false);
+
+
 
   return (
     <>
