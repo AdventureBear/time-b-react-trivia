@@ -324,10 +324,10 @@ function App() {
         }
         setGuesses(0);
     }
-    function updateAnswered() {
-        let newAnswered = answered.push(currentPos)
-        setAnswered(newAnswered)
-    }
+    // function updateAnswered() {
+    //     let newAnswered = answered.push(currentPos)
+    //     setAnswered(newAnswered)
+    // }
 
     generateRandomQuestions()
     // console.log("random question list: ", randomQuestionList)
