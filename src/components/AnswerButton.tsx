@@ -11,9 +11,11 @@ interface Props {
   answer: string;
   gridCell: number;
   correct: number;
-  setShowStory: Dispatch<SetStateAction<number>>;
+  setShowStory: (arg: boolean) => void
+  // setShowStory: Dispatch<SetStateAction<number>>;
   guesses: number;
-  setGuesses: Dispatch<SetStateAction<number>>;
+  setGuesses: (arg: number)=>void
+  // setGuesses: Dispatch<SetStateAction<number>>;
 }
 
 function AnswerButton({
@@ -40,10 +42,19 @@ function AnswerButton({
   }
 
   // List of background colors for the buttons
-  const color = ["blue", "green", "red"];
+  // const color = ["blue", "green", "red"];
 
   // UseState which will control the re-rendering of the button background color
-  const [answerColor, setAnswerColor] = useState(color[0]);
+  const [answerColor, setAnswerColor] = useState("blue");
+  const [guessed, setGuessed] = useState(false)
+
+  function isCorrect(response, correct) {
+      if (response === correct) {
+        return true
+      } else {
+        return false
+      }
+  }
 
   // Method which will control the state changes for the button background color
   // This will be called by each button individually when they are clicked
@@ -51,18 +62,18 @@ function AnswerButton({
   // If the correct answer is found, show the story by flipping the Dispatch setter flag
   // We need to limit the guess count to 3 so a score always shows up
   // We need to also stop multiple clicks on a button from registering
+
   function handleClick(response: number) {
-    if (response == correct) {
-      setAnswerColor(color[1]);
+    if (guessed || guesses===4) return
+    setGuessed(true)
+    if (isCorrect(response, correct)) {
+      updateAnswered()
+
+      setAnswerColor("green");
       setShowStory(1);
-      if (guesses < 3 && answerColor != "green") {
-        setGuesses(guesses);
-      }
     } else {
-      setAnswerColor(color[2]);
-      if (guesses < 3 && answerColor != "red") {
-        setGuesses(guesses + 1);
-      }
+      setAnswerColor("red");
+      setGuesses(guesses + 1);
     }
   }
 
