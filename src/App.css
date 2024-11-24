@@ -12,7 +12,6 @@
   display: grid;
   grid-template-columns: 15% 15% 1fr 15% 15%;
   grid-template-rows: 90px 1fr 90px;
-
   background-color:darkolivegreen;
 }
 
