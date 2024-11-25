@@ -93,7 +93,7 @@ defineGridCell(gridCell)
   return (
     <>
       <button
-        // className={defineGridCell(gridCell)}
+        className="answer"
         style={{
           gridColumStart: gridColumn*2 + 2,
           gridColumnEnd: gridColumn*2 +3,
